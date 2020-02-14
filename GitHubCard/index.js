@@ -103,8 +103,8 @@ function cardMaker(attr){
 
 }
 
-const followersArray = ['sonicemma', 'MMGroesbeck', 'alan5123', 'fjhansen', 'MelodyRackham'];
-// let followersArray = [];
+// const followersArray = ['sonicemma', 'MMGroesbeck', 'alan5123', 'fjhansen', 'MelodyRackham'];
+let followersArray = [];
 
 let cardsParent = document.querySelector('.cards');
 let mainUser = 'https://api.github.com/users/biskoi';
@@ -116,7 +116,7 @@ axios.get(mainUser).then(reply => {
 });
 
 // Get followers from Subject
-function getFollowers(){
+async function getFollowers(){
   let followerUrl = mainUser + '/followers';
   let axiosGet = axios.get(followerUrl);
   if(followersArray.length === 0){
@@ -126,17 +126,28 @@ function getFollowers(){
       })
     });
   }
+
+  await axiosGet;
+
+  followersArray.forEach(user => {
+    let url = apiLink + user;
+    axios.get(url).then(reply => {
+      cardsParent.append(cardMaker(reply.data));
+    });
+  
+  });
+
 }
 
 getFollowers();
 console.log(followersArray);
 
 // Follower cards
-followersArray.forEach(user => {
-  let url = apiLink + user;
-  axios.get(url).then(reply => {
-    cardsParent.append(cardMaker(reply.data));
-  });
+// followersArray.forEach(user => {
+//   let url = apiLink + user;
+//   axios.get(url).then(reply => {
+//     cardsParent.append(cardMaker(reply.data));
+//   });
 
-});
+// });
 
